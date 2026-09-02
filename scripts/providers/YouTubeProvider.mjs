@@ -101,10 +101,27 @@ class YouTubePlayerHandle extends ProviderPlayer {
     this._player.cueVideoById(track.sourceId);
   }
 
-  play() { this._player?.playVideo(); }
+  /**
+   * Play acionado por um comando remoto (via socket) não conta como "gesto do
+   * usuário" pra política de autoplay do navegador — áudio com som pode ser
+   * bloqueado. Autoplay MUDO, porém, é sempre permitido por todo navegador —
+   * então toca mudo primeiro (garantido) e tenta desmutar na sequência: se
+   * este client já tem "confiança" o bastante no domínio do YouTube, funciona
+   * na hora; se não, o YouTube ignora o unMute() silenciosamente e o player
+   * fica visivelmente mudo até o próprio usuário clicar o botão de desmutar
+   * (LayerController cuida de mostrar esse botão via `isMuted()`).
+   */
+  play() {
+    this._player?.mute();
+    this._player?.playVideo();
+    this._player?.unMute();
+  }
+
   pause() { this._player?.pauseVideo(); }
   seek(seconds) { this._player?.seekTo(seconds, true); }
   setVolume(v) { this._player?.setVolume(Math.round(Math.min(1, Math.max(0, v)) * 100)); }
+  unmute() { this._player?.unMute(); }
+  isMuted() { return this._player?.isMuted() ?? true; }
   onReady(cb) { this._callbacks.ready.push(cb); }
   onEnded(cb) { this._callbacks.ended.push(cb); }
   onError(cb) { this._callbacks.error.push(cb); }

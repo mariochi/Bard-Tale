@@ -42,5 +42,9 @@ export class ProviderPlayer {
   onReady(cb) { throw new Error('onReady() não implementado'); }
   onEnded(cb) { throw new Error('onEnded() não implementado'); }
   onError(cb) { throw new Error('onError() não implementado'); }
+  /** Desmuta explicitamente — só faz sentido depois de um clique de verdade do usuário. */
+  unmute() {}
+  /** @returns {boolean} true se o player está mudo agora (default: nunca muda, providers sem essa noção). */
+  isMuted() { return false; }
   destroy() {}
 }

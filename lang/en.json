@@ -52,6 +52,9 @@
       "openMixer": "Open Mixer",
       "openLibrary": "Open Library"
     },
+    "video": {
+      "unmute": "Your browser blocked autoplay with sound — click to unmute"
+    },
     "sceneConfig": {
       "legend": "Bard Tale — Theme",
       "theme": "Theme playlist",

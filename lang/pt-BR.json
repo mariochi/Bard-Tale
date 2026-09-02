@@ -47,6 +47,9 @@
         "noPlayers": "Não há outros jogadores neste mundo."
       }
     },
+    "video": {
+      "unmute": "Seu navegador bloqueou o autoplay com som — clique pra desmutar"
+    },
     "controls": {
       "groupTitle": "Bard Tale",
       "openMixer": "Abrir Mixer",

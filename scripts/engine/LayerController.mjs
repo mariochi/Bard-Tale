@@ -61,10 +61,37 @@ export class LayerController {
     host.className = 'bard-tale-video-host';
     wrapper.appendChild(host);
 
+    // Play disparado por comando remoto (não é gesto do usuário nesse client)
+    // toca sempre mudo primeiro (autoplay mudo é sempre permitido) e tenta
+    // desmutar sozinho — se o navegador bloquear, este botão aparece (ver
+    // _updateMuteIndicator) e um clique de verdade nele sempre funciona.
+    const unmuteButton = document.createElement('button');
+    unmuteButton.type = 'button';
+    unmuteButton.className = 'bard-tale-video-unmute';
+    unmuteButton.title = game.i18n.localize(`${MODULE_ID}.video.unmute`);
+    unmuteButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+    unmuteButton.addEventListener('click', () => {
+      this._playerHandle?.unmute();
+      this._updateMuteIndicator();
+    });
+    wrapper.appendChild(unmuteButton);
+
     document.body.appendChild(wrapper);
     this._wrapper = wrapper;
     this._labelEl = label;
     return host;
+  }
+
+  /**
+   * Mostra o botão de desmutar só quando o player ficou mudo (autoplay
+   * bloqueado nesse client). Confere de novo com um pequeno atraso porque o
+   * bloqueio do navegador pode não refletir em `isMuted()` no instante exato
+   * da chamada.
+   */
+  _updateMuteIndicator() {
+    const check = () => this._wrapper.classList.toggle('bt-muted', this._playerHandle?.isMuted?.() ?? false);
+    check();
+    setTimeout(check, 300);
   }
 
   /** Posição de cada caixinha é escolha de cada jogador — salva local (client scope), não sincronizada. */
@@ -167,6 +194,7 @@ export class LayerController {
       handle.setVolume(0);
       handle.play();
       this.isPlaying = true;
+      this._updateMuteIndicator();
       if (crossfade) fade(handle, 0, this._targetVolume(), CROSSFADE_MS);
       else handle.setVolume(this._targetVolume());
     } else {
@@ -178,6 +206,7 @@ export class LayerController {
     this._playerHandle?.setVolume(this._targetVolume());
     this._playerHandle?.play();
     this.isPlaying = true;
+    this._updateMuteIndicator();
   }
 
   pause() {
