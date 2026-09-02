@@ -52,6 +52,12 @@ function registerSettings() {
   });
 
   // --- client scope: preferências locais de cada jogador ---
+  // Posição em tela de cada caixinha de vídeo do YouTube — cada jogador arrasta
+  // pra onde quiser, não sincronizado (não faria sentido, cada tela é diferente).
+  game.settings.register(MODULE_ID, 'videoBoxPositions', {
+    scope: 'client', config: false, type: Object, default: {}
+  });
+
   game.settings.register(MODULE_ID, 'masterVolume', {
     name: `${MODULE_ID}.settings.masterVolume.name`,
     hint: `${MODULE_ID}.settings.masterVolume.hint`,

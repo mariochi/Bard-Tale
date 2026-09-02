@@ -10,9 +10,10 @@
  * direto no body por LayerController), visível em TODO client conectado
  * enquanto a camada estiver tocando uma faixa do YouTube. Player COMPLETO
  * (controles nativos) e visível — exigência dos Termos de Serviço da API do
- * YouTube, não é só estética. Cada camada tem uma posição fixa própria pra
- * não sobrepor se background/overlay/theme estiverem todas em vídeo ao
- * mesmo tempo.
+ * YouTube, não é só estética. Cada camada começa numa posição própria (pra
+ * não sobrepor se background/overlay/theme estiverem todas em vídeo ao mesmo
+ * tempo), mas é arrastável pela barra de título — cada jogador escolhe a sua
+ * (client setting, não sincronizado entre clients).
  */
 .bard-tale-video-box {
   position: fixed;
@@ -38,6 +39,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.bard-tale-video-label.draggable {
+  cursor: move;
+  touch-action: none; /* deixa o navegador não tratar o arraste como scroll/zoom em touch */
+  user-select: none;
 }
 
 .bard-tale-video-host {

@@ -42,6 +42,8 @@ export class LayerController {
     this._providerId = null;
     this._playerHandle = null;
 
+    this._applySavedPosition();
+    this._makeDraggable();
     this._updateVideoVisibility();
   }
 
@@ -63,6 +65,65 @@ export class LayerController {
     this._wrapper = wrapper;
     this._labelEl = label;
     return host;
+  }
+
+  /** Posição de cada caixinha é escolha de cada jogador — salva local (client scope), não sincronizada. */
+  _applySavedPosition() {
+    const saved = game.settings.get(MODULE_ID, 'videoBoxPositions')?.[this.name];
+    if (!saved) return;
+    // Limita à tela atual — evita uma caixinha "perdida" fora de vista se a
+    // posição foi salva numa resolução diferente da de agora.
+    const left = Math.min(Math.max(saved.left, 0), window.innerWidth - 40);
+    const top = Math.min(Math.max(saved.top, 0), window.innerHeight - 40);
+    this._wrapper.style.left = `${left}px`;
+    this._wrapper.style.top = `${top}px`;
+    this._wrapper.style.right = 'auto';
+    this._wrapper.style.bottom = 'auto';
+  }
+
+  _savePosition() {
+    const rect = this._wrapper.getBoundingClientRect();
+    const positions = foundry.utils.deepClone(game.settings.get(MODULE_ID, 'videoBoxPositions') ?? {});
+    positions[this.name] = { left: Math.round(rect.left), top: Math.round(rect.top) };
+    game.settings.set(MODULE_ID, 'videoBoxPositions', positions);
+  }
+
+  /** Arrasta segurando a barra de título (onde mostra camada + nome da faixa). */
+  _makeDraggable() {
+    this._labelEl.classList.add('draggable');
+    let dragging = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    this._labelEl.addEventListener('pointerdown', (ev) => {
+      dragging = true;
+      const rect = this._wrapper.getBoundingClientRect();
+      startX = ev.clientX;
+      startY = ev.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      this._wrapper.style.right = 'auto';
+      this._wrapper.style.bottom = 'auto';
+      this._wrapper.style.left = `${startLeft}px`;
+      this._wrapper.style.top = `${startTop}px`;
+      this._labelEl.setPointerCapture(ev.pointerId);
+    });
+
+    this._labelEl.addEventListener('pointermove', (ev) => {
+      if (!dragging) return;
+      this._wrapper.style.left = `${startLeft + (ev.clientX - startX)}px`;
+      this._wrapper.style.top = `${startTop + (ev.clientY - startY)}px`;
+    });
+
+    const stopDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      this._savePosition();
+    };
+    this._labelEl.addEventListener('pointerup', stopDrag);
+    this._labelEl.addEventListener('pointercancel', stopDrag);
   }
 
   /** Mostra a caixinha de vídeo (com o player completo do YouTube) só quando a faixa atual for do YouTube. */
