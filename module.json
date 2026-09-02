@@ -2,7 +2,7 @@
   "id": "bard-tale",
   "title": "Bard Tale",
   "description": "Reprodução de música em camadas (background/overlay/theme) a partir de fontes externas (YouTube em v1), sincronizada entre todos os clients de uma sessão. Faixas do YouTube mostram o player completo (exigência do ToS do YouTube) em todo client conectado.",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
