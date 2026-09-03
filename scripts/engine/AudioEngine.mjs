@@ -50,7 +50,7 @@ export class AudioEngine {
   }
 
   // ---- API pública (chamada pela UI de GM/DJ) ----
-  requestLoadLayer(layer, playlistId, trackId) { return this.sync.loadLayer(layer, playlistId, trackId); }
+  requestLoadLayer(layer, playlistId, trackId, options) { return this.sync.loadLayer(layer, playlistId, trackId, options); }
   requestPlay(layer) { return this.sync.play(layer); }
   requestPause(layer) { return this.sync.pause(layer); }
   requestSeek(layer, seconds) { return this.sync.seek(layer, seconds); }
@@ -58,18 +58,25 @@ export class AudioEngine {
   requestSetLayerVolume(layer, volume) { return this.sync.setLayerVolume(layer, volume); }
 
   // ---- Aplicação local (própria origem ou remota, via SyncManager) ----
-  async applyRemoteLoadLayer({ layer, playlistId, trackId }) {
+  /**
+   * `standalone: true` (faixa específica escolhida no Mixer, não a playlist
+   * inteira) carrega a faixa sem anexar `controller.playlist` — quando ela
+   * terminar, `_onTrackEnded` não acha próxima faixa (sem playlist pra
+   * consultar) e para a camada sozinho, sem precisar de nenhum código extra.
+   */
+  async applyRemoteLoadLayer({ layer, playlistId, trackId, standalone }) {
     const playlist = game.bardTale.library.getPlaylist(playlistId);
     const track = playlist?.getTrack(trackId) ?? playlist?.tracks[0] ?? null;
     if (!playlist || !track) return;
 
     const controller = this.layers[layer];
-    controller.playlist = playlist;
+    controller.playlist = standalone ? null : playlist;
     await controller.loadTrack(track);
 
     await this._persistSnapshot(layer, {
-      activePlaylistId: playlist.id,
+      activePlaylistId: playlist.id, // guarda o real mesmo em standalone, só pra resumeFromSnapshot achar a faixa
       currentTrackId: track.id,
+      standalone: !!standalone,
       isPlaying: false,
       startedAtEpoch: null,
       positionSeconds: 0
@@ -100,6 +107,7 @@ export class AudioEngine {
     await this._persistSnapshot(layer, {
       activePlaylistId: null,
       currentTrackId: null,
+      standalone: false,
       isPlaying: false,
       startedAtEpoch: null,
       positionSeconds: 0
@@ -135,7 +143,7 @@ export class AudioEngine {
       if (!playlist || !track) continue;
 
       const controller = this.layers[layer];
-      controller.playlist = playlist;
+      controller.playlist = layerState.standalone ? null : playlist;
       await controller.loadTrack(track, { crossfade: false });
 
       if (layerState.isPlaying && layerState.startedAtEpoch) {

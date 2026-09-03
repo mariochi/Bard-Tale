@@ -11,7 +11,12 @@
           <select class="bt-playlist-select" data-layer-playlist="{{layer.name}}">
             <option value="">{{localize 'bard-tale.apps.mixer.selectPlaylist'}}</option>
             {{#each ../playlists as |p|}}
-              <option value="{{p.id}}">{{p.name}}</option>
+              <optgroup label="{{p.name}}">
+                <option value="{{p.id}}">▶ {{localize 'bard-tale.apps.mixer.wholePlaylist'}}</option>
+                {{#each p.tracks as |t|}}
+                  <option value="{{p.id}}::{{t.id}}">{{t.title}}</option>
+                {{/each}}
+              </optgroup>
             {{/each}}
           </select>
         </div>

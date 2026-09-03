@@ -9,7 +9,14 @@ import { registerSceneControls } from './apps/SceneControls.mjs';
 import { DjSettingsApp } from './apps/DjSettingsApp.mjs';
 
 function emptyLayerState() {
-  return { activePlaylistId: null, currentTrackId: null, isPlaying: false, startedAtEpoch: null, positionSeconds: 0 };
+  return {
+    activePlaylistId: null,
+    currentTrackId: null,
+    standalone: false, // true = faixa específica escolhida no Mixer, sem a playlist anexada pra rotação
+    isPlaying: false,
+    startedAtEpoch: null,
+    positionSeconds: 0
+  };
 }
 
 function registerSettings() {

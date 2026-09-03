@@ -16,6 +16,7 @@
         "worldVolumeHint": "World volume (synced to everyone)",
         "localVolumeHint": "Your local volume",
         "selectPlaylist": "Select a playlist…",
+        "wholePlaylist": "Play entire playlist",
         "emptyPlaylist": "That playlist has no tracks yet."
       },
       "library": {

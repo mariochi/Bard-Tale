@@ -22,9 +22,27 @@ export class MixerApp extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(_options) {
     const engine = game.bardTale.engine;
     const isDJ = game.bardTale.sync.isAuthorized();
-    const playlists = game.bardTale.library.getPlaylists().map((p) => ({ id: p.id, name: p.name }));
+    const allPlaylists = game.bardTale.library.getPlaylists();
+    const playlists = allPlaylists.map((p) => ({
+      id: p.id,
+      name: p.name,
+      tracks: p.tracks.map((t) => ({ id: t.id, title: t.title }))
+    }));
+
     const layers = Object.values(LAYERS).map((name) => {
       const controller = engine.layers[name];
+
+      // Reconstrói o valor do <select> pro estado atual: playlist inteira
+      // (controller.playlist setado) ou faixa avulsa (standalone — acha em
+      // qual playlist ela mora só pra marcar a opção certa no dropdown).
+      let selectValue = '';
+      if (controller.playlist) {
+        selectValue = controller.playlist.id;
+      } else if (controller.currentTrack) {
+        const owner = allPlaylists.find((p) => p.tracks.some((t) => t.id === controller.currentTrack.id));
+        if (owner) selectValue = `${owner.id}::${controller.currentTrack.id}`;
+      }
+
       return {
         name,
         label: game.i18n.localize(`${MODULE_ID}.layers.${name}`),
@@ -33,7 +51,7 @@ export class MixerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         volume: game.settings.get(MODULE_ID, `volume.${name}`),
         muted: game.settings.get(MODULE_ID, `mute.${name}`),
         worldVolume: game.settings.get(MODULE_ID, 'layerVolume')[name] ?? 1,
-        activePlaylistId: controller.playlist?.id ?? ''
+        selectValue
       };
     });
     return { layers, isDJ, playlists };
@@ -46,7 +64,7 @@ export class MixerApp extends HandlebarsApplicationMixin(ApplicationV2) {
     // depender de um helper 'eq' de Handlebars).
     for (const layer of context.layers) {
       const select = this.element.querySelector(`[data-layer-playlist="${layer.name}"]`);
-      if (select) select.value = layer.activePlaylistId;
+      if (select) select.value = layer.selectValue;
     }
 
     this.element.querySelectorAll('[data-layer-volume]').forEach((input) => {
@@ -74,22 +92,31 @@ export class MixerApp extends HandlebarsApplicationMixin(ApplicationV2) {
       });
     });
 
-    // Selecionar uma playlist salva carrega a primeira faixa dela direto na camada,
-    // sem precisar passar pela Library.
+    // Selecionar uma playlist carrega a primeira faixa dela e mantém a rotação
+    // (repetir/embaralhar conforme configurado na Library). Selecionar uma
+    // faixa específica (dentro do optgroup da playlist) carrega só ela,
+    // isolada — toca e para ao terminar, sem avançar pra próxima da playlist.
     this.element.querySelectorAll('[data-layer-playlist]').forEach((select) => {
       select.addEventListener('change', async (ev) => {
         const layer = ev.target.dataset.layerPlaylist;
-        const playlistId = ev.target.value;
-        if (!playlistId) return;
+        const raw = ev.target.value;
+        if (!raw) return;
 
+        const [playlistId, trackId] = raw.split('::');
         const playlist = game.bardTale.library.getPlaylist(playlistId);
-        const firstTrack = playlist?.tracks[0];
-        if (!playlist || !firstTrack) {
-          ui.notifications.warn(game.i18n.localize(`${MODULE_ID}.apps.mixer.emptyPlaylist`));
-          ev.target.value = '';
-          return;
+        if (!playlist) { ev.target.value = ''; return; }
+
+        if (trackId) {
+          await game.bardTale.engine.requestLoadLayer(layer, playlistId, trackId, { standalone: true });
+        } else {
+          const firstTrack = playlist.tracks[0];
+          if (!firstTrack) {
+            ui.notifications.warn(game.i18n.localize(`${MODULE_ID}.apps.mixer.emptyPlaylist`));
+            ev.target.value = '';
+            return;
+          }
+          await game.bardTale.engine.requestLoadLayer(layer, playlistId, firstTrack.id, { standalone: false });
         }
-        await game.bardTale.engine.requestLoadLayer(layer, playlistId, firstTrack.id);
         this.render();
       });
     });

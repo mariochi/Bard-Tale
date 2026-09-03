@@ -56,7 +56,15 @@ export class SyncManager {
     return payload;
   }
 
-  loadLayer(layer, playlistId, trackId) { return this._dispatch('loadLayer', { layer, playlistId, trackId }); }
+  /**
+   * `standalone: true` carrega só essa faixa, sem anexar a playlist pra
+   * rotação — ao terminar, a camada para (não avança pra próxima faixa da
+   * playlist). Usado quando o usuário escolhe uma faixa específica em vez da
+   * playlist inteira no Mixer.
+   */
+  loadLayer(layer, playlistId, trackId, { standalone = false } = {}) {
+    return this._dispatch('loadLayer', { layer, playlistId, trackId, standalone });
+  }
   play(layer) { return this._dispatch('play', { layer }); }
   pause(layer) { return this._dispatch('pause', { layer }); }
   seek(layer, seconds) { return this._dispatch('seek', { layer, seconds }); }
