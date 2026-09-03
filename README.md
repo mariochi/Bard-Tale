@@ -34,8 +34,8 @@ See the full design in [ARCHITECTURE.md](ARCHITECTURE.md) (Portuguese only, for 
 
 ### Basic test flow
 
-1. Open the **Library**, create a playlist, paste a YouTube video URL under "Add track".
-2. Open the **Mixer**, hit play on the `background` layer.
+1. Open the **Library**, create a playlist, paste a YouTube video URL under "Add track" (or pick a local audio file already on your server via the folder icon).
+2. Open the **Mixer**, pick that playlist in the `background` layer's dropdown — either "▶ Play entire playlist" or one specific track from its optgroup — and hit play.
 3. On another client (or an incognito tab logged in as a different user), confirm the same track starts playing.
 4. Adjust the **local** volume/mute (headphone icon) on the Mixer on that second client and confirm it doesn't affect the first one.
 5. Adjust the **world** volume (antenna icon, GM/DJ only) and confirm it affects everyone.
@@ -50,7 +50,7 @@ As GM: *Game Settings → Configure Settings → Module Settings → Bard Tale �
 - **The first play in a session may need one click per player to unlock sound.** GM/DJ play/pause/stop always controls the video for everyone — but since that command arrives over a socket rather than a direct click on the player, some browsers may block autoplay-with-sound the first time. When that happens the box still plays visibly but muted, with a speaker icon over the video — one click on it unlocks the sound (the same spirit as the "click to enable audio" prompt Foundry itself already shows).
 - **Spotify isn't included** (see ARCHITECTURE.md, section 9) — it would require a different playback model (Web Playback SDK per client with Premium, or remote control via Spotify Connect on the GM's client only), incompatible with the synced pipeline used for YouTube/local.
 - **Native YouTube playlists (`list=`) aren't imported.** Deliberate decision: importing would require a YouTube Data API v3 key, and a fully client-side module has no way to hide that key from a curious player (it would sit in `game.settings`, visible to any client). Instead, the GM builds Bard Tale playlists manually, adding individual videos or local files through the Library.
-- **Multiplayer smoke test already passed** (GM + a real second player tested together). Still not exercised in a real test: local file playback through the Library's new file picker, and automatic theme switching by scene (`SceneConfigTab`) — if something looks off there, that's the next place to check.
+- **Multiplayer smoke test passed for both YouTube and local file playback** (GM + a real second player tested together across a full session), including picking a specific track vs. an entire playlist, and stop/restart behavior. Still not exercised in a real test: automatic theme switching by scene (`SceneConfigTab`) — if something looks off there, that's the next place to check.
 
 ---
 
@@ -84,8 +84,8 @@ Veja o desenho completo em [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Fluxo básico de teste
 
-1. Abra a **Library**, crie uma playlist, cole uma URL de vídeo do YouTube em "Adicionar faixa".
-2. Abra o **Mixer**, dê play na camada `background`.
+1. Abra a **Library**, crie uma playlist, cole uma URL de vídeo do YouTube em "Adicionar faixa" (ou escolha um arquivo de áudio já no servidor pelo ícone de pasta).
+2. Abra o **Mixer**, escolha essa playlist no `<select>` da camada `background` — "▶ Tocar playlist inteira" ou uma faixa específica do grupo dela — e dê play.
 3. Em outro client (ou aba anônima logada como outro usuário), confirme que a mesma faixa começa a tocar.
 4. Ajuste o volume/mute **local** (ícone de fone) do Mixer nesse segundo client e confirme que não afeta o primeiro.
 5. Ajuste o volume **de mundo** (ícone de antena, só visível pra GM/DJ) e confirme que afeta todo mundo.
@@ -100,4 +100,4 @@ Como GM: *Game Settings → Configure Settings → Module Settings → Bard Tale
 - **O primeiro play numa sessão pode pedir 1 clique por jogador pra ligar o som.** O play/pause/stop do GM/DJ sempre controla o vídeo em todo mundo — mas como esse comando chega por socket (não por clique direto no player), o navegador de alguns jogadores pode bloquear autoplay com som na primeira vez. Nesse caso a caixinha toca visivelmente mas muda, com um botão de alto-falante sobre o vídeo — um clique nele libera o som (parecido com o "clique pra ativar áudio" que o próprio Foundry já pede).
 - **Spotify não está incluído** (ver ARCHITECTURE.md, seção 9) — exigiria um modelo de reprodução diferente (Web Playback SDK por client com Premium, ou controle remoto via Spotify Connect só no client do GM), incompatível com o pipeline síncrono usado para YouTube/local.
 - **Playlists nativas do YouTube (`list=`) não são importadas.** Decisão deliberada: importar exigiria a YouTube Data API v3 com chave própria, e um módulo 100% client-side não tem como esconder essa chave de jogadores curiosos (ela fica visível em `game.settings` pra qualquer client). Em vez disso, o mestre monta as playlists do Bard Tale manualmente, adicionando vídeos individuais ou arquivos locais pela Library.
-- **Smoke test multiplayer já passou** (GM + um segundo jogador de verdade testaram junto). Ainda sem exercitar num teste real: reprodução de arquivo local pelo seletor novo da Library, e a troca automática de tema por cena (`SceneConfigTab`) — se aparecer algo estranho aí, é o próximo lugar a olhar.
+- **Smoke test multiplayer já passou pra YouTube e arquivo local** (GM + um segundo jogador de verdade testaram junto numa sessão completa), incluindo escolher faixa específica vs. playlist inteira, e comportamento de parar/reiniciar. Ainda sem exercitar num teste real: a troca automática de tema por cena (`SceneConfigTab`) — se aparecer algo estranho aí, é o próximo lugar a olhar.
