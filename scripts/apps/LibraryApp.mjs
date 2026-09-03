@@ -1,8 +1,10 @@
 import { MODULE_ID, LAYERS } from '../constants.mjs';
 import { YouTubeProvider } from '../providers/YouTubeProvider.mjs';
+import { LocalFileProvider } from '../providers/LocalFileProvider.mjs';
 import { Playlist, LOOP_MODES } from '../data/Playlist.mjs';
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
+const { FilePicker } = foundry.applications.apps;
 
 function escapeAttr(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -21,6 +23,7 @@ export class LibraryApp extends HandlebarsApplicationMixin(ApplicationV2) {
       setLoop: LibraryApp.#onSetLoop,
       shufflePlaylist: LibraryApp.#onShufflePlaylist,
       addFromUrl: LibraryApp.#onAddFromUrl,
+      addFromFile: LibraryApp.#onAddFromFile,
       loadIntoLayer: LibraryApp.#onLoadIntoLayer,
       removeTrack: LibraryApp.#onRemoveTrack,
       moveTrack: LibraryApp.#onMoveTrack
@@ -119,6 +122,35 @@ export class LibraryApp extends HandlebarsApplicationMixin(ApplicationV2) {
     try {
       const resolved = await new YouTubeProvider().resolve(url);
       for (const track of Array.isArray(resolved) ? resolved : [resolved]) playlist.addTrack(track);
+      await game.bardTale.library.savePlaylist(playlist);
+    } catch (err) {
+      ui.notifications.error(err.message);
+    }
+    this.render();
+  }
+
+  /**
+   * FilePicker nativo do Foundry pra escolher um arquivo de áudio já hospedado
+   * no servidor (em Data/...). O callback só dispara se o usuário selecionar
+   * algo; se fechar sem escolher, o hook `closeFilePicker` resolve a Promise
+   * com null (senão ficaria pendurada pra sempre nesse caso).
+   */
+  static async #onAddFromFile(_event, target) {
+    const playlistId = target.closest('[data-playlist-id]')?.dataset.playlistId;
+    const playlist = game.bardTale.library.getPlaylist(playlistId);
+    if (!playlist) return;
+
+    const path = await new Promise((resolve) => {
+      let done = false;
+      const finish = (value) => { if (!done) { done = true; resolve(value); } };
+      Hooks.once('closeFilePicker', () => finish(null));
+      new FilePicker({ type: 'audio', callback: (selected) => finish(selected) }).render(true);
+    });
+    if (!path) return;
+
+    try {
+      const track = await new LocalFileProvider().resolve(path);
+      playlist.addTrack(track);
       await game.bardTale.library.savePlaylist(playlist);
     } catch (err) {
       ui.notifications.error(err.message);

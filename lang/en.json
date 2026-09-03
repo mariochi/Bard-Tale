@@ -27,6 +27,7 @@
         "rename": "Rename",
         "addTrack": "Add track",
         "addTrackTitle": "Add track from URL",
+        "addFile": "Add local audio file",
         "deletePlaylist": "Delete playlist",
         "loopPlaylist": "Repeat playlist",
         "loopTrack": "Repeat current track",

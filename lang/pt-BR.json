@@ -27,6 +27,7 @@
         "rename": "Renomear",
         "addTrack": "Adicionar faixa",
         "addTrackTitle": "Adicionar faixa por URL",
+        "addFile": "Adicionar arquivo de áudio local",
         "deletePlaylist": "Excluir playlist",
         "loopPlaylist": "Repetir playlist",
         "loopTrack": "Repetir faixa atual",

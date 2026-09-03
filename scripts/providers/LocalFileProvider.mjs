@@ -18,7 +18,8 @@ export class LocalFileProvider extends SourceProvider {
   static id = 'local';
 
   async resolve(input) {
-    const title = input.split('/').pop();
+    const filename = input.split('/').pop() ?? input;
+    const title = filename.replace(/\.[^./]+$/, ''); // tira a extensão pro título ficar apresentável
     return { id: foundry.utils.randomID(), title, provider: LocalFileProvider.id, sourceId: input };
   }
 
