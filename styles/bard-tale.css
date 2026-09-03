@@ -5,6 +5,39 @@
   padding: 0.5rem;
 }
 
+/* Menu flutuante (fora de qualquer Application — injetado direto no body).
+   left/bottom escolhidos pra ficar acima da caixinha de status do jogador
+   (#players, canto inferior esquerdo nativo do Foundry) sem sobrepor. */
+#bard-tale-floating-menu {
+  position: fixed;
+  left: 10px;
+  bottom: 70px;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#bard-tale-floating-menu button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #8a7245;
+  background: #2c2620;
+  color: #ecdfc2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+#bard-tale-floating-menu button:hover {
+  background: #3a3226;
+  border-color: #c9a86a;
+}
+
 /*
  * Caixa de vídeo do YouTube: fica fora de qualquer Application (injetada
  * direto no body por LayerController), visível em TODO client conectado

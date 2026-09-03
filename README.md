@@ -24,7 +24,7 @@ See the full design in [ARCHITECTURE.md](ARCHITECTURE.md) (Portuguese only, for 
 
 ### Opening the panels
 
-- **Scene controls**: a new "Bard Tale" icon (music note) at the end of the scene-controls column, on the left — below the last native icon (palette/art). Click it to open the flyout with "Open Mixer" (everyone sees it) and "Open Library" (GM/DJ only). A known core bug in v13 affecting new control groups ([issue #12258](https://github.com/foundryvtt/foundryvtt/issues/12258)) was tested live and **did not occur** on this installation — worth re-checking if the Foundry server is ever updated.
+- **Floating menu**: two round buttons fixed near the bottom-left corner, above the player status box — the music note opens the Mixer (everyone sees it), the book icon opens the Library (GM/DJ only). Plain DOM buttons, always fire on click.
 - **Console/macro** (always works, useful for debugging):
 
   ```js
@@ -74,7 +74,7 @@ Veja o desenho completo em [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ### Abrindo os painéis
 
-- **Controles de cena**: um ícone novo "Bard Tale" (nota musical) no final da coluna de controles de cena, à esquerda — abaixo do último ícone nativo (paleta/arte). Clique nele pra abrir o flyout com os botões "Open Mixer" (todo mundo vê) e "Open Library" (só GM/DJ). Um bug conhecido do core no v13 pra grupos de controle novos ([issue #12258](https://github.com/foundryvtt/foundryvtt/issues/12258)) foi testado ao vivo e **não ocorreu** nesta instalação — vale reconferir se algum dia atualizarem o Foundry no servidor.
+- **Menu flutuante**: dois botões redondos fixos perto do canto inferior esquerdo, acima da caixinha de status do jogador — a nota musical abre o Mixer (todo mundo vê), o ícone de livro abre a Library (só GM/DJ). Botões DOM comuns, sempre disparam o clique.
 - **Console/macro** (sempre funciona, útil pra depurar):
 
   ```js

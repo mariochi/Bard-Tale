@@ -5,7 +5,7 @@ import { Library } from './data/Library.mjs';
 import { MixerApp } from './apps/MixerApp.mjs';
 import { LibraryApp } from './apps/LibraryApp.mjs';
 import { registerSceneConfigTab } from './apps/SceneConfigTab.mjs';
-import { registerSceneControls } from './apps/SceneControls.mjs';
+import { createFloatingMenu } from './apps/FloatingMenu.mjs';
 import { DjSettingsApp } from './apps/DjSettingsApp.mjs';
 
 function emptyLayerState() {
@@ -86,7 +86,6 @@ function registerSettings() {
 Hooks.once('init', () => {
   registerSettings();
   registerSceneConfigTab();
-  registerSceneControls();
 });
 
 Hooks.once('ready', async () => {
@@ -109,6 +108,8 @@ Hooks.once('ready', async () => {
 
   game.bardTale.mixerApp = new MixerApp();
   game.bardTale.libraryApp = new LibraryApp();
+
+  createFloatingMenu();
 
   console.log(`${MODULE_ID} | pronto.`);
 });
