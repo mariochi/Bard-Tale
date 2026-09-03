@@ -97,7 +97,15 @@ Hooks.once('ready', async () => {
   game.bardTale.engine = new AudioEngine(game.bardTale.sync);
   game.bardTale.sync.registerSocketHandlers(game.bardTale.engine);
 
-  await game.bardTale.engine.resumeFromSnapshot();
+  // Segunda camada de defesa: mesmo que resumeFromSnapshot falhe de um jeito
+  // totalmente inesperado (já tem try/catch por camada lá dentro), isso não
+  // pode impedir o Mixer/Library de serem criados — sem eles, não tem como
+  // nem abrir o painel pra investigar o problema.
+  try {
+    await game.bardTale.engine.resumeFromSnapshot();
+  } catch (err) {
+    console.error(`${MODULE_ID} | resumeFromSnapshot falhou, seguindo sem restaurar playback:`, err);
+  }
 
   game.bardTale.mixerApp = new MixerApp();
   game.bardTale.libraryApp = new LibraryApp();

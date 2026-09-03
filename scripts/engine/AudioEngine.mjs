@@ -131,26 +131,38 @@ export class AudioEngine {
     await game.settings.set(MODULE_ID, 'playbackState', state);
   }
 
-  /** Chamado no hook `ready`: recoloca cada camada no ponto em que estava, calculando o offset decorrido. */
+  /**
+   * Chamado no hook `ready`: recoloca cada camada no ponto em que estava,
+   * calculando o offset decorrido. Cada camada é isolada num try/catch
+   * próprio — uma faixa que falha ao carregar (ex.: arquivo local movido/
+   * removido do servidor entre uma sessão e outra) não pode derrubar as
+   * outras camadas nem, pior, abortar o resto do hook `ready` (o que
+   * impediria até o Mixer/Library de serem criados — reportado como "a
+   * janela trava fechada e não abre mais").
+   */
   async resumeFromSnapshot() {
     const state = game.settings.get(MODULE_ID, 'playbackState');
     for (const layer of Object.values(LAYERS)) {
-      const layerState = state[layer];
-      if (!layerState?.currentTrackId) continue;
+      try {
+        const layerState = state[layer];
+        if (!layerState?.currentTrackId) continue;
 
-      const playlist = game.bardTale.library.getPlaylist(layerState.activePlaylistId);
-      const track = playlist?.getTrack(layerState.currentTrackId);
-      if (!playlist || !track) continue;
+        const playlist = game.bardTale.library.getPlaylist(layerState.activePlaylistId);
+        const track = playlist?.getTrack(layerState.currentTrackId);
+        if (!playlist || !track) continue;
 
-      const controller = this.layers[layer];
-      controller.playlist = layerState.standalone ? null : playlist;
-      await controller.loadTrack(track, { crossfade: false });
+        const controller = this.layers[layer];
+        controller.playlist = layerState.standalone ? null : playlist;
+        await controller.loadTrack(track, { crossfade: false });
 
-      if (layerState.isPlaying && layerState.startedAtEpoch) {
-        const elapsed = (Date.now() - layerState.startedAtEpoch) / 1000;
-        controller.seek(layerState.positionSeconds + elapsed);
-        controller.play();
-        if (layer === LAYERS.OVERLAY) this.layers[LAYERS.BACKGROUND].setDuck(true);
+        if (layerState.isPlaying && layerState.startedAtEpoch) {
+          const elapsed = (Date.now() - layerState.startedAtEpoch) / 1000;
+          controller.seek(layerState.positionSeconds + elapsed);
+          controller.play();
+          if (layer === LAYERS.OVERLAY) this.layers[LAYERS.BACKGROUND].setDuck(true);
+        }
+      } catch (err) {
+        console.error(`${MODULE_ID} | Falha ao restaurar a camada '${layer}' na inicialização, seguindo sem ela:`, err);
       }
     }
   }
