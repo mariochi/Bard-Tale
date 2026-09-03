@@ -111,15 +111,28 @@ class YouTubePlayerHandle extends ProviderPlayer {
    * fica visivelmente mudo até o próprio usuário clicar o botão de desmutar
    * (LayerController cuida de mostrar esse botão via `isMuted()`).
    */
-  play() {
+  async play() {
+    await this._readyPromise; // comando na API antes do onReady pode ser silenciosamente ignorado
     this._player?.mute();
     this._player?.playVideo();
     this._player?.unMute();
   }
 
-  pause() { this._player?.pauseVideo(); }
-  seek(seconds) { this._player?.seekTo(seconds, true); }
-  setVolume(v) { this._player?.setVolume(Math.round(Math.min(1, Math.max(0, v)) * 100)); }
+  async pause() {
+    await this._readyPromise;
+    this._player?.pauseVideo();
+  }
+
+  async seek(seconds) {
+    await this._readyPromise;
+    this._player?.seekTo(seconds, true);
+  }
+
+  async setVolume(v) {
+    await this._readyPromise;
+    this._player?.setVolume(Math.round(Math.min(1, Math.max(0, v)) * 100));
+  }
+
   unmute() { this._player?.unMute(); }
   isMuted() { return this._player?.isMuted() ?? true; }
   onReady(cb) { this._callbacks.ready.push(cb); }
