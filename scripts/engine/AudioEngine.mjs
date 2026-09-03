@@ -95,8 +95,7 @@ export class AudioEngine {
 
   async applyRemoteStopLayer({ layer }) {
     const controller = this.layers[layer];
-    controller?.pause();
-    controller?.clearCurrentTrack();
+    controller?.stop();
     if (layer === LAYERS.OVERLAY) this.layers[LAYERS.BACKGROUND].setDuck(false);
     await this._persistSnapshot(layer, {
       activePlaylistId: null,

@@ -239,8 +239,23 @@ export class LayerController {
     this._endedCallbacks.push(cb);
   }
 
-  /** Chamado pelo AudioEngine ao parar a camada (currentTrack não passa mais por loadTrack). */
-  clearCurrentTrack() {
+  /**
+   * Zera a camada de verdade — chamado no "stop" explícito e quando a
+   * playlist acaba sem próxima faixa. Não basta pausar: um player de arquivo
+   * local que já terminou sozinho (o node de áudio do Web Audio API é
+   * "descartável", não dá pra tocar de novo o mesmo) fica preso num estado
+   * que nem pausa nem play resolvem depois — diferente do YouTube, que
+   * consegue reiniciar o mesmo vídeo já terminado com `playVideo()`. Solução:
+   * destruir o handle de verdade (não só pausar) pros dois providers, pra
+   * ficar com o mesmo comportamento limpo (camada "vazia") de qualquer jeito
+   * que ela pare de tocar.
+   */
+  stop() {
+    this._playerHandle?.pause();
+    this._playerHandle?.destroy();
+    this._playerHandle = null;
+    this._providerId = null;
+    this.isPlaying = false;
     this.currentTrack = null;
     this._updateVideoVisibility();
   }
@@ -259,7 +274,7 @@ export class LayerController {
       await this.loadTrack(next, { crossfade: true });
       this.play();
     } else {
-      this.isPlaying = false;
+      this.stop();
       this._endedCallbacks.forEach((cb) => cb());
     }
   }
