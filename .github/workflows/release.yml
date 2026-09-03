@@ -1,0 +1,37 @@
+name: Release
+
+# Dispara ao empurrar uma tag "vX.Y.Z". Empacota o módulo num zip com a
+# estrutura certa (module.json na raiz do zip, sem pasta extra por dentro —
+# é isso que o instalador do Foundry espera) e publica module.json + module.zip
+# como assets de uma Release do GitHub.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # `download` no module.json aponta pra um zip fixo desta versão (não "latest") —
+      # exigência do Package Admin do Foundry, pra instalar uma versão antiga não
+      # acabar baixando a mais nova por engano. `manifest` continua em "latest" de
+      # propósito, é assim que a checagem de atualização de um módulo já instalado
+      # funciona.
+      - name: Pin download URL to this release's tag
+        run: sed -i "s#__TAG__#${GITHUB_REF_NAME}#g" module.json
+
+      - name: Package module
+        run: zip -r module.zip module.json scripts templates styles lang LICENSE
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            module.json
+            module.zip
+          generate_release_notes: true

@@ -1,0 +1,81 @@
+{
+  "bard-tale": {
+    "layers": {
+      "background": "Background",
+      "overlay": "Overlay",
+      "theme": "Theme"
+    },
+    "apps": {
+      "mixer": {
+        "title": "Bard Tale — Mixer",
+        "noTrack": "No track loaded",
+        "playPause": "Play / Pause",
+        "stop": "Stop",
+        "mute": "Mute",
+        "openLibrary": "Open library",
+        "worldVolumeHint": "World volume (synced to everyone)",
+        "localVolumeHint": "Your local volume",
+        "selectPlaylist": "Select a playlist…",
+        "emptyPlaylist": "That playlist has no tracks yet."
+      },
+      "library": {
+        "title": "Bard Tale — Library",
+        "newPlaylist": "New playlist",
+        "newPlaylistDefaultName": "New Playlist",
+        "renamePlaylist": "Rename playlist",
+        "renamePlaylistTitle": "Rename playlist",
+        "rename": "Rename",
+        "addTrack": "Add track",
+        "addTrackTitle": "Add track from URL",
+        "deletePlaylist": "Delete playlist",
+        "loopPlaylist": "Repeat playlist",
+        "loopTrack": "Repeat current track",
+        "shuffle": "Shuffle track order",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "removeTrack": "Remove track",
+        "loadedIntoLayer": "Loaded into the {layer} layer. Open the Mixer and hit play.",
+        "noPlaylists": "No playlists yet",
+        "noTracks": "No tracks yet"
+      },
+      "djSettings": {
+        "title": "Bard Tale — DJs",
+        "menuLabel": "Manage DJs",
+        "hint": "Players allowed to control Bard Tale playback in addition to the GM.",
+        "save": "Save",
+        "saved": "DJ list saved.",
+        "noPlayers": "No other players in this world."
+      }
+    },
+    "controls": {
+      "groupTitle": "Bard Tale",
+      "openMixer": "Open Mixer",
+      "openLibrary": "Open Library"
+    },
+    "sceneConfig": {
+      "legend": "Bard Tale — Theme",
+      "theme": "Theme playlist",
+      "none": "None",
+      "autoSwitch": "Auto-switch on scene activation"
+    },
+    "settings": {
+      "masterVolume": {
+        "name": "Master volume",
+        "hint": "Overall volume multiplier applied to every layer, local to this client."
+      },
+      "volume": {
+        "background": { "name": "Background layer volume" },
+        "overlay": { "name": "Overlay layer volume" },
+        "theme": { "name": "Theme layer volume" }
+      },
+      "mute": {
+        "background": { "name": "Mute background layer" },
+        "overlay": { "name": "Mute overlay layer" },
+        "theme": { "name": "Mute theme layer" }
+      }
+    },
+    "warnings": {
+      "notAuthorized": "You are not authorized to control Bard Tale playback."
+    }
+  }
+}

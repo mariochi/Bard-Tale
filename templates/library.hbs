@@ -1,0 +1,68 @@
+<div class="bard-tale-library">
+  <header>
+    <button type="button" data-action="newPlaylist">
+      <i class="fas fa-plus"></i> {{localize 'bard-tale.apps.library.newPlaylist'}}
+    </button>
+  </header>
+
+  <ul class="bt-playlist-list">
+    {{#each playlists as |playlist|}}
+      <li data-playlist-id="{{playlist.id}}">
+        <div class="bt-playlist-header">
+          <strong>{{playlist.name}}</strong>
+          <button type="button" data-action="renamePlaylist" title="{{localize 'bard-tale.apps.library.renamePlaylist'}}">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button type="button" data-action="addFromUrl" title="{{localize 'bard-tale.apps.library.addTrack'}}">
+            <i class="fas fa-link"></i>
+          </button>
+          <button type="button" data-action="deletePlaylist" title="{{localize 'bard-tale.apps.library.deletePlaylist'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <div class="bt-playlist-toolbar">
+          <button type="button" class="{{#if playlist.loopPlaylist}}active{{/if}}" data-action="setLoop" data-loop="playlist" title="{{localize 'bard-tale.apps.library.loopPlaylist'}}">
+            <i class="fas fa-repeat"></i>
+          </button>
+          <button type="button" class="{{#if playlist.loopTrack}}active{{/if}}" data-action="setLoop" data-loop="track" title="{{localize 'bard-tale.apps.library.loopTrack'}}">
+            <i class="fas fa-rotate-right"></i>
+          </button>
+          <button type="button" data-action="shufflePlaylist" title="{{localize 'bard-tale.apps.library.shuffle'}}">
+            <i class="fas fa-shuffle"></i>
+          </button>
+        </div>
+
+        <ol class="bt-track-list">
+          {{#each playlist.tracks as |track|}}
+            <li data-track-id="{{track.id}}">
+              <span class="bt-track-order">
+                <button type="button" data-action="moveTrack" data-direction="-1" title="{{localize 'bard-tale.apps.library.moveUp'}}" {{#if @first}}disabled{{/if}}>
+                  <i class="fas fa-chevron-up"></i>
+                </button>
+                <button type="button" data-action="moveTrack" data-direction="1" title="{{localize 'bard-tale.apps.library.moveDown'}}" {{#if @last}}disabled{{/if}}>
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+              </span>
+              <span class="bt-track-title">{{track.title}}</span>
+              <span class="bt-track-actions">
+                {{#each @root.layerButtons as |btn|}}
+                  <button type="button" data-action="loadIntoLayer" data-layer="{{btn.id}}" title="{{btn.label}}">
+                    <i class="fas {{btn.icon}}"></i>
+                  </button>
+                {{/each}}
+                <button type="button" data-action="removeTrack" title="{{localize 'bard-tale.apps.library.removeTrack'}}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </span>
+            </li>
+          {{else}}
+            <li class="bt-empty">{{localize 'bard-tale.apps.library.noTracks'}}</li>
+          {{/each}}
+        </ol>
+      </li>
+    {{else}}
+      <li class="bt-empty">{{localize 'bard-tale.apps.library.noPlaylists'}}</li>
+    {{/each}}
+  </ul>
+</div>

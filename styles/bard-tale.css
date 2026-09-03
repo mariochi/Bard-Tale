@@ -1,0 +1,209 @@
+.bard-tale-mixer, .bard-tale-library {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+/*
+ * Caixa de vídeo do YouTube: fica fora de qualquer Application (injetada
+ * direto no body por LayerController), visível em TODO client conectado
+ * enquanto a camada estiver tocando uma faixa do YouTube. Player COMPLETO
+ * (controles nativos) e visível — exigência dos Termos de Serviço da API do
+ * YouTube, não é só estética. Cada camada tem uma posição fixa própria pra
+ * não sobrepor se background/overlay/theme estiverem todas em vídeo ao
+ * mesmo tempo.
+ */
+.bard-tale-video-box {
+  position: fixed;
+  right: 12px;
+  z-index: 60;
+  width: 280px;
+  background: #000;
+  border: 2px solid #8a7245;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.bard-tale-video-box[data-bard-tale-layer="background"] { bottom: 12px; }
+.bard-tale-video-box[data-bard-tale-layer="overlay"] { bottom: 200px; }
+.bard-tale-video-box[data-bard-tale-layer="theme"] { bottom: 388px; }
+
+.bard-tale-video-label {
+  background: #221d17;
+  color: #ecdfc2;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bard-tale-video-host {
+  width: 280px;
+  height: 158px;
+}
+
+.bard-tale-video-host iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.bard-tale-mixer .bt-layer {
+  border: 1px solid var(--color-border-light-tertiary, #999);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+}
+
+.bard-tale-mixer .bt-layer header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.bard-tale-mixer .bt-layer-track {
+  font-weight: normal;
+  opacity: 0.75;
+  font-size: 0.85em;
+}
+
+.bard-tale-mixer .bt-layer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.bard-tale-mixer .bt-volume {
+  flex: 1;
+}
+
+.bard-tale-mixer .bt-playlist-select {
+  flex: 1;
+  width: 100%;
+}
+
+.bard-tale-mixer .bt-volume-label {
+  width: 1.1rem;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.bard-tale-mixer .bt-mute {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.bard-tale-mixer footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bard-tale-library {
+  height: 100%;
+}
+
+.bard-tale-library header {
+  flex: 0 0 auto;
+}
+
+.bard-tale-library .bt-playlist-list {
+  flex: 1 1 auto;
+  min-height: 0; /* sem isso o flex item não encolhe e o overflow-y não faz nada */
+  overflow-y: auto;
+}
+
+.bard-tale-library .bt-playlist-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bard-tale-library .bt-playlist-header strong {
+  flex: 1;
+}
+
+.bard-tale-library .bt-playlist-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  margin: 0.2rem 0 0.2rem 1.25rem;
+}
+
+.bard-tale-library .bt-playlist-toolbar button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.bard-tale-library .bt-playlist-toolbar button.active {
+  background: var(--color-bg-option, #444);
+  border-color: var(--color-border-highlight, orange);
+  color: var(--color-text-hyperlink, orange);
+}
+
+.bard-tale-library .bt-track-list {
+  margin: 0.25rem 0 0.75rem 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.bard-tale-library .bt-track-order {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.bard-tale-library .bt-track-order button {
+  line-height: 0.7;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.bard-tale-library .bt-track-order button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.bard-tale-library .bt-track-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+.bard-tale-library .bt-track-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bard-tale-library .bt-track-actions {
+  display: flex;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.bard-tale-library .bt-empty {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.bard-tale-dj-settings .bt-dj-list {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+}
+
+.bard-tale-dj-settings footer {
+  display: flex;
+  justify-content: flex-end;
+}

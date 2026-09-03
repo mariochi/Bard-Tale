@@ -1,0 +1,81 @@
+{
+  "bard-tale": {
+    "layers": {
+      "background": "Background",
+      "overlay": "Overlay",
+      "theme": "Tema"
+    },
+    "apps": {
+      "mixer": {
+        "title": "Bard Tale — Mixer",
+        "noTrack": "Nenhuma faixa carregada",
+        "playPause": "Tocar / Pausar",
+        "stop": "Parar",
+        "mute": "Mudo",
+        "openLibrary": "Abrir biblioteca",
+        "worldVolumeHint": "Volume de mundo (sincronizado com todos)",
+        "localVolumeHint": "Seu volume local",
+        "selectPlaylist": "Selecione uma playlist…",
+        "emptyPlaylist": "Essa playlist ainda não tem faixas."
+      },
+      "library": {
+        "title": "Bard Tale — Biblioteca",
+        "newPlaylist": "Nova playlist",
+        "newPlaylistDefaultName": "Nova Playlist",
+        "renamePlaylist": "Renomear playlist",
+        "renamePlaylistTitle": "Renomear playlist",
+        "rename": "Renomear",
+        "addTrack": "Adicionar faixa",
+        "addTrackTitle": "Adicionar faixa por URL",
+        "deletePlaylist": "Excluir playlist",
+        "loopPlaylist": "Repetir playlist",
+        "loopTrack": "Repetir faixa atual",
+        "shuffle": "Embaralhar ordem das faixas",
+        "moveUp": "Mover pra cima",
+        "moveDown": "Mover pra baixo",
+        "removeTrack": "Remover faixa",
+        "loadedIntoLayer": "Carregada na camada {layer}. Abra o Mixer e dê play.",
+        "noPlaylists": "Nenhuma playlist ainda",
+        "noTracks": "Nenhuma faixa ainda"
+      },
+      "djSettings": {
+        "title": "Bard Tale — DJs",
+        "menuLabel": "Gerenciar DJs",
+        "hint": "Jogadores autorizados a controlar a reprodução do Bard Tale além do mestre.",
+        "save": "Salvar",
+        "saved": "Lista de DJs salva.",
+        "noPlayers": "Não há outros jogadores neste mundo."
+      }
+    },
+    "controls": {
+      "groupTitle": "Bard Tale",
+      "openMixer": "Abrir Mixer",
+      "openLibrary": "Abrir Biblioteca"
+    },
+    "sceneConfig": {
+      "legend": "Bard Tale — Tema",
+      "theme": "Playlist de tema",
+      "none": "Nenhuma",
+      "autoSwitch": "Trocar automaticamente ao ativar a cena"
+    },
+    "settings": {
+      "masterVolume": {
+        "name": "Volume mestre",
+        "hint": "Multiplicador de volume geral aplicado a todas as camadas, local a este client."
+      },
+      "volume": {
+        "background": { "name": "Volume da camada background" },
+        "overlay": { "name": "Volume da camada overlay" },
+        "theme": { "name": "Volume da camada tema" }
+      },
+      "mute": {
+        "background": { "name": "Mudo na camada background" },
+        "overlay": { "name": "Mudo na camada overlay" },
+        "theme": { "name": "Mudo na camada tema" }
+      }
+    },
+    "warnings": {
+      "notAuthorized": "Você não tem permissão para controlar a reprodução do Bard Tale."
+    }
+  }
+}

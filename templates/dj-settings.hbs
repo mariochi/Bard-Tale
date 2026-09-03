@@ -1,0 +1,20 @@
+<div class="bard-tale-dj-settings">
+  <p>{{localize 'bard-tale.apps.djSettings.hint'}}</p>
+  <ul class="bt-dj-list">
+    {{#each players as |p|}}
+      <li>
+        <label>
+          <input type="checkbox" data-user-id="{{p.id}}" {{checked p.isDJ}}>
+          {{p.name}}
+        </label>
+      </li>
+    {{else}}
+      <li class="bt-empty">{{localize 'bard-tale.apps.djSettings.noPlayers'}}</li>
+    {{/each}}
+  </ul>
+  <footer>
+    <button type="button" data-action="save">
+      <i class="fas fa-save"></i> {{localize 'bard-tale.apps.djSettings.save'}}
+    </button>
+  </footer>
+</div>

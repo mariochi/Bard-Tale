@@ -1,0 +1,15 @@
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (caso alguma ferramenta de build/lint entre no futuro)
+node_modules/
+
+# Pacotes gerados na hora de montar uma Release do módulo
+*.zip
+
+# Segredos locais (nenhum é usado hoje, mas por precaução)
+.env
+.env.local

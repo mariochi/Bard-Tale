@@ -1,0 +1,56 @@
+<div class="bard-tale-mixer">
+  {{#each layers as |layer|}}
+    <section class="bt-layer" data-layer="{{layer.name}}">
+      <header>
+        <span class="bt-layer-label">{{layer.label}}</span>
+        <span class="bt-layer-track">{{layer.trackTitle}}</span>
+      </header>
+
+      {{#if ../isDJ}}
+        <div class="bt-layer-row">
+          <select class="bt-playlist-select" data-layer-playlist="{{layer.name}}">
+            <option value="">{{localize 'bard-tale.apps.mixer.selectPlaylist'}}</option>
+            {{#each ../playlists as |p|}}
+              <option value="{{p.id}}">{{p.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="bt-layer-row bt-transport">
+          <button type="button" data-action="togglePlay" title="{{localize 'bard-tale.apps.mixer.playPause'}}">
+            <i class="fas {{#if layer.isPlaying}}fa-pause{{else}}fa-play{{/if}}"></i>
+          </button>
+          <button type="button" data-action="stop" title="{{localize 'bard-tale.apps.mixer.stop'}}">
+            <i class="fas fa-stop"></i>
+          </button>
+        </div>
+
+        <div class="bt-layer-row">
+          <label class="bt-volume-label" title="{{localize 'bard-tale.apps.mixer.worldVolumeHint'}}">
+            <i class="fas fa-broadcast-tower"></i>
+          </label>
+          <input type="range" class="bt-volume" min="0" max="1" step="0.05" value="{{layer.worldVolume}}" data-layer-world-volume="{{layer.name}}">
+        </div>
+      {{/if}}
+
+      <div class="bt-layer-row">
+        <label class="bt-volume-label" title="{{localize 'bard-tale.apps.mixer.localVolumeHint'}}">
+          <i class="fas fa-headphones"></i>
+        </label>
+        <input type="range" class="bt-volume" min="0" max="1" step="0.05" value="{{layer.volume}}" data-layer-volume="{{layer.name}}">
+        <label class="bt-mute">
+          <input type="checkbox" data-layer-mute="{{layer.name}}" {{checked layer.muted}}>
+          {{localize 'bard-tale.apps.mixer.mute'}}
+        </label>
+      </div>
+    </section>
+  {{/each}}
+
+  {{#if isDJ}}
+    <footer>
+      <button type="button" data-action="openLibrary">
+        <i class="fas fa-book-music"></i> {{localize 'bard-tale.apps.mixer.openLibrary'}}
+      </button>
+    </footer>
+  {{/if}}
+</div>

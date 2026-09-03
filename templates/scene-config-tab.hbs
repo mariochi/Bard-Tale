@@ -1,0 +1,18 @@
+<fieldset class="bard-tale-scene-config">
+  <legend>{{localize 'bard-tale.sceneConfig.legend'}}</legend>
+  <div class="form-group">
+    <label>{{localize 'bard-tale.sceneConfig.theme'}}</label>
+    <select name="flags.bard-tale.themePlaylistId">
+      <option value="">{{localize 'bard-tale.sceneConfig.none'}}</option>
+      {{#each playlists as |p|}}
+        <option value="{{p.id}}">{{p.name}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="checkbox">
+      <input type="checkbox" name="flags.bard-tale.themeAutoSwitch" {{checked autoSwitch}}>
+      {{localize 'bard-tale.sceneConfig.autoSwitch'}}
+    </label>
+  </div>
+</fieldset>
